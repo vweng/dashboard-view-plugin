@@ -1,9 +1,11 @@
+#side-panel, #top-panel, #footer, #top-nav, #view-message, #viewList {
+    display: none;
+}
+
+#main-panel {
+    margin-left: 0 !important;
+}
 
 body.two-column #side-panel { display: none; } 
 body.two-column #main-panel { border: 0px; width: auto; height: 100%; margin-left: 0px; } 
 div#page-body { border: 0px; } 
-footer { display: none; }
-
-#side-panel, #top-panel, #footer, #top-nav, #view-message, #viewList {
-    display: none;
-}

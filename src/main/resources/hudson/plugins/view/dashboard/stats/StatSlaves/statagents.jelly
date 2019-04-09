@@ -1,0 +1,64 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+  xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
+  <script>
+    var buildStat = <st:bind value="${it}"/>;
+    var err = 0;
+    function repeat() {
+      buildStat.getStats(function(t) {
+        if (t.status === 200) {
+          err = 0;
+          var stats = t.responseObject();
+          document.getElementById('agents-${it.id}').innerHTML = stats.agents;
+          document.getElementById('onlineAgents-${it.id}').innerHTML = stats.onlineAgents;
+          document.getElementById('offlineAgents-${it.id}').innerHTML = stats.offlineAgents;
+          document.getElementById('disconnectedAgents-${it.id}').innerHTML = stats.disconnectedAgents;
+          document.getElementById('tasksInQueue-${it.id}').innerHTML = stats.tasksInQueue;
+          document.getElementById('runningJobs-${it.id}').innerHTML = stats.runningJobs;
+        } else if (t.status === 503 || t.status === 0) {
+          // Consider these recoverable and don't update error count
+          document.getElementById('runningJobs-${it.id}').innerHTML = 'ERR-' +
+            (t.status === 0)? 'OFFLINE' : 'PROXY';
+        } else {
+          err++;
+          document.getElementById('runningJobs-${it.id}').innerHTML = 'ERR-' + err;
+        }
+
+        if (err &lt; 5) {
+          setTimeout('repeat()', 2500);
+        }
+      });
+    }
+    repeat();
+  </script>
+  <table id="statistics" class="sortable pane bigtable" style="margin-top: 0px;">
+    <tr style="border-top: 0px;">
+      <th align="left">${%Agents}</th>
+      <th align="left">${%Online agents}</th>
+      <th align="left">${%Offline agents}</th>
+      <th align="left">${%Disconnected agents}</th>
+      <th align="left">${%Tasks in queue}</th>
+      <th align="left">${%Running jobs}</th>
+    </tr>
+    <tr>
+      <td>
+        <div id="agents-${it.id}" />
+      </td>
+      <td>
+        <div id="onlineAgents-${it.id}" />
+      </td>
+      <td>
+        <div id="offlineAgents-${it.id}" />
+      </td>
+      <td>
+        <div id="disconnectedAgents-${it.id}" />
+      </td>
+      <td>
+        <div id="tasksInQueue-${it.id}" />
+      </td>
+      <td>
+        <div id="runningJobs-${it.id}" />
+      </td>
+    </tr>
+  </table>
+</j:jelly>
