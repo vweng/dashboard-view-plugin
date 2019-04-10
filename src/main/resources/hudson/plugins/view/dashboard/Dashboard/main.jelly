@@ -5,25 +5,19 @@
   <j:if test="${it.isHideJenkinsPanels()}">
     <link href="${rootURL}/plugin/dashboard-view/css/full_screen.css" type="text/css"
       rel="stylesheet"/>
-    <div align="right">
-      <l:task href="${rootURL}/${it.viewUrl}configure" icon="icon-gear icon-md"
-        permission="${it.CONFIGURE}" title="${%Edit View}"/>
-    </div>
   </j:if>
 
   <j:set var="views" value="${it.owner.views}"/>
   <j:set var="currentView" value="${it}"/>
   <j:choose>
     <j:when test="${empty(it.items)}">
-      <j:if test="${!empty(app.items) and !it.isHideJenkinsPanels()}">
+      <j:if test="${!empty(app.items)}">
         <st:include page="viewTabs.jelly" it="${it.owner.viewsTabBar}"/>
       </j:if>
       <st:include page="noJob.jelly"/>
     </j:when>
     <j:otherwise>
-      <j:if test="${!it.isHideJenkinsPanels()}">
-        <st:include page="viewTabs.jelly" it="${it.owner.viewsTabBar}"/>
-      </j:if>
+      <st:include page="viewTabs.jelly" it="${it.owner.viewsTabBar}"/>
       <j:set var="jobs" value="${it.jobs}"/>
 
       <j:choose>
